@@ -50,6 +50,7 @@ const App = () => {
 
   const handleDeleteActivity = (event: SyntheticEvent<HTMLButtonElement>, id:string) => {
     setSubmitting(true);
+    debugger;
     setTarget(event.currentTarget.name);
     agent.Activities.delete(id).then(() => { 
       setActivities([...activities.filter(a => a.id !== id)])

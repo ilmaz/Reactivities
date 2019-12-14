@@ -18,6 +18,7 @@ const ActivityList: React.FC<IProps> = ({
         submitting,
         target
     }) => {
+        debugger;
     return (
         <Segment clearing>
             <Item.Group divided>
