@@ -12,18 +12,8 @@ class ActivityStore{
 
     //ijad khoroji jadid
     @computed get activitiesByDate(){
-        return this.groupActivitiesByDate(Array.from(this.activityRegistery.values()))
-    }
-
-    groupActivitiesByDate(activities: IActivity[]) { 
-        const sortedActivities = activities.sort(
-            (a, b) => Date.parse(a.date) - Date.parse(b.date)
-        )
-        return Object.entries(sortedActivities.reduce((activities,activity)=>{
-            const date = activity.date.split('T')[0];
-            activities[date]=activities[date]? [...activities[date],activity]:[activity];
-            return activities;
-        }, {} as { [key: string]: IActivity[] }));
+        return Array.from(this.activityRegistery.values())
+        .sort((a, b) => Date.parse(a.date) - Date.parse(b.date));
     }
 
     //bussines
