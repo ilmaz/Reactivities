@@ -33,7 +33,7 @@ class ActivityStore{
             const activities = await agent.Activities.list();
             runInAction('loading activities',()=>{
                 activities.forEach((activity) => { 
-                    activity.date = new Date(activity.date!);
+                    //activity.date = new Date(activity.date!);
                     this.activityRegistery.set(activity.id, activity);
                 });
             })

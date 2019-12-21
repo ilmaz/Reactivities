@@ -31,7 +31,7 @@ const ActivityForm: React.FC<RouteComponentProps<DetailParams>> = ({ match, hist
         title: '',
         category: '',
         description: '',
-        date: null,
+        date: '',
         city: '',
         venue: ''
     });
@@ -71,7 +71,7 @@ const ActivityForm: React.FC<RouteComponentProps<DetailParams>> = ({ match, hist
                             <Field component={TextInput as any} name='title' placeholder='Title' value={activity!.title} />
                             <Field component={TextAreaInput as any} rows={3} name='description' placeholder='Description' value={activity.description} />
                             <Field component={SelectInput as any} options={category} name='category' placeholder='Category' value={activity.category} />
-                            <Field component={DateInput as any} name='date' placeholder='Date' value={activity.date!} />
+                            <Field component={DateInput as any} name='date' placeholder='Date' value={activity.date} />
                             <Field component={TextInput as any} name='city' placeholder='City' value={activity.city} />
                             <Field component={TextInput as any} name='venue' placeholder='Venue' value={activity.venue} />
                             <Button loading={submitting} floated='right' positive type='submit' content='Submit' />

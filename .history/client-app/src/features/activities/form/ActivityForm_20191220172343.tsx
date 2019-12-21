@@ -7,11 +7,6 @@ import { observer } from 'mobx-react-lite';
 import { RouteComponentProps } from 'react-router-dom';
 import { Form as Finalform, Field } from 'react-final-form'
 import TextInput from '../../../app/common/form/TextInput';
-import { TextAreaInput } from '../../../app/common/form/TextAreaInput';
-import { SelectInput } from '../../../app/common/form/SelectInput';
-import { category } from '../../../app/common/options/categoryOptions';
-import { DateInput } from '../../../app/common/form/DateInput';
-
 
 interface DetailParams {
     id: string
@@ -31,7 +26,7 @@ const ActivityForm: React.FC<RouteComponentProps<DetailParams>> = ({ match, hist
         title: '',
         category: '',
         description: '',
-        date: null,
+        date: '',
         city: '',
         venue: ''
     });
@@ -69,11 +64,11 @@ const ActivityForm: React.FC<RouteComponentProps<DetailParams>> = ({ match, hist
                     <Finalform onSubmit={handleFinalFormSubmit} render={({ handleSubmit }) => (
                         <Form onSubmit={handleSubmit}>
                             <Field component={TextInput as any} name='title' placeholder='Title' value={activity!.title} />
-                            <Field component={TextAreaInput as any} rows={3} name='description' placeholder='Description' value={activity.description} />
-                            <Field component={SelectInput as any} options={category} name='category' placeholder='Category' value={activity.category} />
-                            <Field component={DateInput as any} name='date' placeholder='Date' value={activity.date!} />
-                            <Field component={TextInput as any} name='city' placeholder='City' value={activity.city} />
-                            <Field component={TextInput as any} name='venue' placeholder='Venue' value={activity.venue} />
+                            <Field component={TextInput as any} name='description' placeholder='Description' value={activity.description} />
+                            <Field component={TextInput as any} name='category' placeholder='Category' value={activity.category} />
+                            <Field name='date' placeholder='Date' value={activity.date} />
+                            <Field name='city' placeholder='City' value={activity.city} />
+                            <Field name='venue' placeholder='Venue' value={activity.venue} />
                             <Button loading={submitting} floated='right' positive type='submit' content='Submit' />
                             <Button onClick={() => history.push('/activities')} floated='right' type='submit' content='Cancel' />
                         </Form>
