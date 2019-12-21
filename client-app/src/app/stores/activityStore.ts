@@ -33,7 +33,7 @@ class ActivityStore{
             const activities = await agent.Activities.list();
             runInAction('loading activities',()=>{
                 activities.forEach((activity) => { 
-                    activity.date = new Date(activity.date!);
+                    activity.date = activity.date!;
                     this.activityRegistery.set(activity.id, activity);
                 });
             })
@@ -56,7 +56,7 @@ class ActivityStore{
         }try {
             activity = await agent.Activities.details(id);
             runInAction('getting activity', () => {
-                activity.date = new Date(activity.date);
+                activity.date = activity.date;
                 this.selectedActivity = activity;
                 this.loadingInitial = false;
 
