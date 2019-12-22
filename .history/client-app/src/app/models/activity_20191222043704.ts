@@ -20,7 +20,6 @@ export class ActivityFormValues implements IActivityFormValues {
     date?: Date = undefined;
     time?: Date = undefined;
     city: string = '';
-    venue: string = '';
 
     constructor(init?: IActivityFormValues) {
         if (init && init.date) {

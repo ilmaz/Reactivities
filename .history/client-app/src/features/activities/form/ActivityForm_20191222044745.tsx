@@ -59,9 +59,9 @@ const ActivityForm: React.FC<RouteComponentProps<DetailParams>> = ({ match, hist
     return (
         <Grid>
             <Grid.Column width={10}>
-                <Segment clearing >
+                <Segment loading={loading}>
                     <Finalform initialValues={activity} onSubmit={handleFinalFormSubmit} render={({ handleSubmit }) => (
-                        <Form onSubmit={handleSubmit} loading={loading}>
+                        <Form onSubmit={handleSubmit}>
                             <Field component={TextInput as any} name='title' placeholder='Title' value={activity!.title} />
                             <Field component={TextAreaInput as any} rows={3} name='description' placeholder='Description' value={activity.description} />
                             <Field component={SelectInput as any} options={category} name='category' placeholder='Category' value={activity.category} />
@@ -71,8 +71,8 @@ const ActivityForm: React.FC<RouteComponentProps<DetailParams>> = ({ match, hist
                             </Form.Group>
                             <Field component={TextInput as any} name='city' placeholder='City' value={activity.city} />
                             <Field component={TextInput as any} name='venue' placeholder='Venue' value={activity.venue} />
-                            <Button disabled={loading} loading={submitting} floated='right' positive type='submit' content='Submit' />
-                            <Button disabled={loading} onClick={() => history.push('/activities')} floated='right' type='submit' content='Cancel' />
+                            <Button loading={submitting} floated='right' positive type='submit' content='Submit' />
+                            <Button onClick={() => history.push('/activities')} floated='right' type='submit' content='Cancel' />
                         </Form>
                     )} />
                 </Segment>
