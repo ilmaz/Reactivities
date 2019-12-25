@@ -423,6 +423,52 @@ npm install revalidate
 npm install @types/revalidate
 
 pristine->حالتی که فرم دست نخورده +تر و تازه 
+-----------------Identity ----------------------
+Microsoft.AspNetCore.Identity.EntityFrameworkCore
+dotnet ef migrations add "AddIdentity" -p Persistence -s API 
+
+//startup
+var builder = services.AddIdentityCore<AppUser>();
+var identityBuilder = new IdentityBuilder(builder.UserType, builder.Services);
+identityBuilder.AddEntityFrameworkStores<DbContext>();
+identityBuilder.AddSignInManager<SignInManager<AppUser>>();
+
+Pa$$w0rd
+
+*Jwt Token
+install package System.IdentityModel.Tokens.Jwt  =>latest version
+
+*Api
+Install-Package Microsoft.AspNetCore.Authentication.JwtBearer 
+
+//ba ham estefade shavad
+app.UseAuthentication();
+app.UseAuthorization();
+
+*dotnet user-secrets //secret manager
+dotnet user-secrets set "TokenKey" "super secret key" -p API //12/16 dide shavad
+dotnet user-secrets list  -p API
+
+//tag zir dar csproj fhdn ezafe shavad ya dastore: dotnet user-secrets init
+<UserSecretsId>28f162e3-7a5f-459d-8624-200a7773d9be</UserSecretsId>
+%APPDATA%\Microsoft\UserSecrets\<user_secrets_id>\secrets.json
+
+https://docs.microsoft.com/en-us/aspnet/core/security/app-secrets?view=aspnetcore-3.1&tabs=windows
+
+//har request bayad Authenticate karde bashad
+var policy=new AuthorizationPolicyBuilder().RequireAuthenticatedUser().Build();
+
+
+
+
+
+
+
+
+
+
+
+
 
 	  
 
