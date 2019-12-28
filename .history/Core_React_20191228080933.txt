@@ -1,0 +1,501 @@
+***dynamic Css***
+const style={
+      backgroundColor:'yellow',
+      color:'black',
+    }
+    if(this.state.showAuthors){
+      style.backgroundColor='red';
+      style.color='white';
+    }
+style={style}
+----------------------------------
+***********css module********
+esme css hatman bayad be sorate myName.module.css bashe
+import style from './myName.module.css';
+-------------------------------------
+this.setState((prevState,props)=>{
+    return  { 
+      showAuthors: !status,
+      toggleCounter: prevState.toggleCounter + 1
+    } 
+  });
+-----------------------------------
+*************prop validation *************
+npm install --save prop-types
+
+import PropTypes from 'prop-types';
+
+Author.propTypes={
+  avatar: PropTypes.string,
+  click: PropTypes.func,
+}
+---------------------------------
+*****************refrence*************
+*baraye focus /playback va .. estefade kard
+*be in dard mikhore ke ma manzoremoon ro az kar ba yek element beresoonim
+*baraye estefade az refrence component bayad az state full estefade kard
+ctor==>  this.textInput = React.createRef();
+ focusTextInput(){
+    if (this.props.position == 0)
+      this.textInput.current.focus();
+  }
+  componentDidMount(){
+    this.focusTextInput();
+  }
+ farakhani=><input ref={this.textInput}/>
+ 
+ ya be jaye bala=> <
+ 
+ componentDidMount(){
+    if (this.props.position == 0)
+        this.inputElement.focus();
+  }
+ input ref={(inp)=>{this.inputElement=inp}} />
+ 
+ --------------------------------
+ context-api:
+ بدون ارتباط با پراپس  یک مقدار رو از از یک کامپوننت به کامپوننت دیگه انتقال بدیم
+ export const AuthContext=React.createContext(false);  ==>balaye class
+ farakhani:
+ import {AuthContext} from '../../../containers/App'
+ 
+ //bala sare ctor
+ static contextType = AuthContext;
+ 
+*ba dastor this.context mitavan dastre30 peyda kard
+----------------------------------
+Http-client:
+npm install --save axios
+---------------------------------
+routing:
+
+npm install --save react-router-dom
+
+import { BrowserRouter as Router, Route, Link } from 'react-router-dom';
+
+<ul>
+	//single page
+	<li><Link to="/">صفحه اصلی</Link></li>
+
+	//multi page
+	<li><a href="/">صفحه اصلی</a></li>
+
+</ul>
+
+<Router>
+	<Route path="/" exact component={FullPost} />
+	<Route path="/authors" exact component={Authors} />
+	<Route path="/posts" exact component={FullPost} />
+	<Route path="/new-post" exact component={NewPost} />
+</Router>
+--------------------------------------------
+peyda kardan mogheeyar karbar az route
+
+<NavLink to="/">صفحه اصلی</NavLink>
+*class "active" be link ka ezafe mikunad ya mitan dasti class dad=>activeClassName="myClassName"
+---------------------------------------------
+dynamic parameter:ba : moshakhas mishavad
+<Route path="/posts/:id" exact component={FullPost} />
+{this.params.match.params} ==> mishavad etela'ato khond
+---------------------------------------------
+redirect route
+
+<Switch>
+	<Route path="/" exact component={FullPost} />
+	<Route path="/authors" exact component={Authors} />
+	<Route path="/posts"  component={FullPost} />
+	<Route path="/new-post" exact component={NewPost} />
+	<Redirect from="/" to="/new-post"/>
+</Switch>
+---------------------------------------------
+redirect after submit 
+ let redirect=null;
+        if(this.state.submitted){
+            redirect=<Redirect to="/posts"/>
+        }
+		
+<div className="ui container">
+                {redirect}
+---------------------------------------------
+lazy loading
+1)ezafi kardan Suspense
+import React, { Component, Suspense } from 'react';
+2)estefade az render
+<Route path="/new-post" exact render={()=>
+                (
+                  <Suspense fallback={<div>is loading...</div>}>
+                  <NewPost />
+                </Suspense>
+                )
+              } /> 
+-----------------------------------------------
+ejad safhe 404
+<Route render={()=><h1>404</h1>}/>
+-----------------------------------------------
+*Redux
+npm install --save redux
+npm install --save react-redux
+
+marahel redux:
+const redux = require('redux')
+
+1)//create store
+const createStore=redux.createStore;
+const initialSate = {
+    name:'ilmaz',
+    counter: 0
+}
+2)//create reducer
+const rootReducer = (state = initialSate, action) => {
+    //state:moghe'eyati ke mikhad update kune
+    //action anjam shode
+    if (action.type === 'INC_COUNTER'){
+        return {
+            ...state,
+            counter: state.counter += 1
+        }
+    }
+    if (action.type === 'ADD_COUNTER'){
+        return {
+            ...state,
+            counter: state.counter + action.value
+        }
+    }
+    return state;
+}
+
+3)//conect ba reducer
+const store = createStore(rootReducer);
+
+
+console.log(store.getState());
+
+4)//Subscribtion
+//ghabl az har store mitavan subscrib dasht
+store.subscribe(() => {
+    console.log('[Subscribe]', store.getState());
+})
+
+5)//Dispaching Action
+//esme delkhah :esme action
+store.dispatch({type:'INC_COUNTER'})
+store.dispatch({ type: 'ADD_COUNTER', value: 20 })
+
+console.log(store.getState());
+-----------------------------------------------
+dotnet new sln ==>pishfarz esme folder ro migire
+dotnet new classlib -n Domain
+dotnet new webapi -n API
+dotnet sln add Domain/ ==> Project `Domain\Domain.csproj` added to the solution.
+****
+E:\Reactivities\Application>dotnet add reference ../Domain
+
+dotnet run -p .\API\ 
+
+http://localhost:5000/api/WeatherForecast
+----------------- add migration --------------------------------
+*dotnet tool install --global dotnet-ef
+*Microsoft.EntityFrameworkCore.Design
+taghire be shekle zir:
+https://stackoverflow.com/questions/57745481/unable-to-create-an-object-of-type-mycontext-for-the-different-patterns-suppo
+
+dotnet ef migrations add InitialCreate -p Persistence -s API
+------------------ run program -----------
+cd API
+dotent watch run
+------------------show sqlite------------------------
+ctrl+shift+p
+type==> sqlite 
+select open the enable automatic sqlite explorer tool
+------------------seed Data-------------------------------
+ protected override void OnModelCreating(ModelBuilder builder){
+            builder.Entity<Value>()
+                .HasData(
+                    new Value { Id = 1, Name = "Value 101" },
+                    new Value { Id = 2, Name = "Value 102" },
+                    new Value { Id = 3, Name = "Value 103" }
+                );
+        }
+dotnet ef migrations add SeedValues  -p Persistence -s API  
+------------------React -------------------------------------
+npx create-react-app client-app --use-npm --typescript
+tsx=>ts+jsx
+rafx+tab =>ye function tsx misaze
+*intrinsic attributes=>really referring to the properties that we're passing 
+down to our module
+----------------API---------------------
+npm install axios
+---------------- semantic UI ------------
+npm install semantic-ui-react
+https://react.semantic-ui.com/
+---------------------------
+Command:
+Does something
+Modifies state
+Should not return a value
+
+Query:
+Answers a question
+Does not modify state
+Should return a value
+------------CQRS single database------------------
+       API
+	  |    |
+	 |       |
+Query         Command
+    |            |
+    |          Domain
+	|		     |
+Data Access   Persistence
+    |            |
+	|            |
+  
+       Data Base
+------------CQRS read/write----------
+       API
+	  |    |
+	 |       |
+Query         Command
+    |            |
+    |          Domain
+	|		     |
+Data Access   Persistence
+    |            |
+	|            |
+Read DataBase <--Write DataBase
+---------CQRS Event Store -----------
+       API
+	  |    |
+	 |       |
+Query         Command
+    |            |
+    |          Domain
+	|		     |
+Data Access   Persistence
+    |            |
+	|            |
+
+Read DataBase <--Event Store
+------------------------------
+CQRS - Read/Write DataBase
+Commands use write DB
+Queries use read DB
+Eventual consistency
+can be faster
+-------------------------
+CQRS-Event Store 
+*Pros:
+Scalability
+Flexibility
+
+*Cons:
+More complex than other
+patterns
+Does not modify state
+Event Sourcing costs
+-------- Mediatr -------------
+Install-Package MediatR.Extensions.Microsoft.DependencyInjection -Version 7.0.0
+------------------------------
+http://localhost:5000/api/Activities
+{
+"id":"566892d3-8905-46ea-b9b1-76f3733f6493",
+	"Title": "Past Activity 9",
+	"Date": "2020-01-08T06:37:58.0471009",
+	"Description": "Activity 2 months ago",
+	"Category": "drinks",
+	"City": "London",
+	"Venue": "Pub"
+}
+------------------------------
+coalescing operator==>??
+curly brace ==> {
+exclamation mark ==>!  baraye ijade maghadiri ke nullable hastan
+-------------Create Snipped----------------
+Performanses-->User Snipped->select name project->Enter name
+https://snippet-generator.app/
+------------------ react stracture --------------------------
+https://reactjs.org/docs/faq-structure.html
+-------------- Hook -----------------------------
+*They let you use state and other React features without writing a class.
+1)State Hook:
+با استفاده از هوک useState داخل Functional Component ها می توان از State استفاده
+useState returns a pair: the current state value and a function that lets you update it.
+const [count, setCount] = useState(0)
+<button onClick={() => setCount(count + 1)}>
+2)Effect Hook
+با استفاده از هوک useState داخل Functional Component ها می توان از State استفاده کرد
+componentDidMount, componentDidUpdate, and componentWillUnmount
+ 
+const [count, setCount] = useState(0);
+// Similar to componentDidMount and componentDidUpdate:
+useEffect(() => {
+// Update the document title using the browser API
+document.title = `You clicked ${count} times`;
+});
+
+3)useContext
+There are a few less commonly used built-in Hooks that you might find useful. For example, useContext lets you subscribe to React context without introducing nesting:
+
+function Example() {
+  const locale = useContext(LocaleContext);
+  const theme = useContext(ThemeContext);
+  // ...
+--------------------------------------------
+rafc==>short-key navbar
+--- Fragment -----------
+be jaye estefade az <div> baraye negah dashtane componnent ha az <Fragment></Fragment> mitavan estefade kard
+------------------------------------
+npm install uuid
+npm install @types/uuid
+————————————
+dotnet ef drop database -p Persistence -s API
+—————————————————-
+npm install mobx mobx-react-lite
+*dar file tsconfig.json hatman |"experimentalDecorators": true | set shavad
+-------------------
+Array.from(this.activityRegister.values())
+--------------------
+runInAction==> runInAction is a simple utility that takes an code block and executes in an (anonymous) action. This is useful to create and execute actions on the fly, for example inside an asynchronous process.
+------------
+mobx developer tools
+------------Route----------------
+npm install react-router-dom
+npm install @types/react-router-dom
+NavLink==>Link fa'al ro behesh class active mide ke hatman baraye '/' bayad "exact" ezafe shavad
+Link=> baraks NavLink ast
+history.goBack()<==>history.push('/activities')
+
+
+ <Fragment>
+	<Route exact path='/' component={HomePage} />
+	//harchizi ke ersal shode
+	<Route path={'/(.+)'} render={()=>(
+	   <Fragment>
+		 <NavBar/>
+		<Container style={{ marginTop: '7em' }}>
+		  <Route exact path='/activities' component={ActivityDashboard} />
+		  <Route path='/activities/:id' component={ActivityDetails} />
+		  <Route key={location.key} path={['/createActivity','/manage/:id']} component={ActivityForm} />
+		</Container>
+	   </Fragment>
+	)}/>
+</Fragment>
+-----------------------------
+FluentValidation.AspNetCore
+dotnet restore
+dotnet build
+:AbstractValidator//az in erse bebarim
+
+//register kardane fluent ha
+services.AddControllers()
+            .AddFluentValidation(cfg => cfg.RegisterValidatorsFromAssemblyContaining<Create>());
+---------
+RuleFor(x => x.Title).NotEmpty().WithMessage("ali")
+---------
+interceptor:
+axios.interceptors.response.use(undefined, error => {
+
+})
+---------
+notification
+https://fkhadra.github.io/react-toastify/
+npm install react-toastify
+index.tsx=>import 'react-toastify/dist/ReactToastify.min.css';
+
+app=><ToastContainer position='bottom-right' />
+toast.error('Server error - check the terminal for mor info!')
+---------validation---------
+install react-final-form final-form
+!->exclamation
+
+npm install react-widgets react-widgets-date-fns
+npm install date-fns@2.0.0-alpha.7
+npm install @types/react-widgets
+
+1)create manual-->folder in root-->typing-custom and 
+  in foolder-->react-widgets-date-fns.d.ts
+2)declare module 'react-widgets-date-fns';
+3)tsconfig.json-->include-->
+ "src",
+    "./typing-custom/**/*.ts"
+----------------------------------------
+npm install revalidate
+npm install @types/revalidate
+
+pristine->حالتی که فرم دست نخورده +تر و تازه 
+-----------------Identity ----------------------
+Microsoft.AspNetCore.Identity.EntityFrameworkCore
+dotnet ef migrations add "AddIdentity" -p Persistence -s API 
+
+//startup
+var builder = services.AddIdentityCore<AppUser>();
+var identityBuilder = new IdentityBuilder(builder.UserType, builder.Services);
+identityBuilder.AddEntityFrameworkStores<DbContext>();
+identityBuilder.AddSignInManager<SignInManager<AppUser>>();
+
+Pa$$w0rd
+
+*Jwt Token
+install package System.IdentityModel.Tokens.Jwt  =>latest version
+
+*Api
+Install-Package Microsoft.AspNetCore.Authentication.JwtBearer 
+
+//ba ham estefade shavad
+app.UseAuthentication();
+app.UseAuthorization();
+
+*dotnet user-secrets //secret manager
+dotnet user-secrets set "TokenKey" "super secret key" -p API //12/16 dide shavad
+dotnet user-secrets list  -p API
+
+//tag zir dar csproj fhdn ezafe shavad ya dastore: dotnet user-secrets init
+<UserSecretsId>28f162e3-7a5f-459d-8624-200a7773d9be</UserSecretsId>
+%APPDATA%\Microsoft\UserSecrets\<user_secrets_id>\secrets.json
+
+https://docs.microsoft.com/en-us/aspnet/core/security/app-secrets?view=aspnetcore-3.1&tabs=windows
+
+//har request bayad Authenticate karde bashad
+var policy=new AuthorizationPolicyBuilder().RequireAuthenticatedUser().Build();
+------------------------- AutoMapper --------------------------------
+AutoMapper.Extensions.Microsoft.DependencyInjection
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+	  
+
+
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+
+
