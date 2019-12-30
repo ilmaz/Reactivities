@@ -5,7 +5,7 @@ import { RouteComponentProps } from 'react-router';
 import LoadingComponent from '../../../app/layout/LoadingComponent';
 import { ActivityDetailInfo } from './ActivityDetailInfo';
 import { ActivityDetailChat } from './ActivityDetailChat';
-import { ActivityDetailSidebar } from './ActivityDetailSidebar';
+import ActivityDetailSidebar from './ActivityDetailSidebar';
 import ActivityDetailHeader from './ActivityDetailHeader';
 import { RootStoreContext } from '../../../app/stores/rootStore';
 
@@ -37,7 +37,7 @@ const ActivityDetails: React.FC<RouteComponentProps<DetailParams>> = ({
                 <ActivityDetailChat />
             </Grid.Column>
             <Grid.Column width={6}>
-                <ActivityDetailSidebar />
+                <ActivityDetailSidebar attendees={activity.userActivities} />
             </Grid.Column>
         </Grid>
     )
