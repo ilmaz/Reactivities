@@ -484,6 +484,14 @@ services.Configure<CloudinarySettings>(Configuration.GetSection("Cloudinary"));
 
 Nuget:
 CloudinaryDotNet 
+------------------- react-dropzone -----------------
+npm install --save react-dropzone
+
+-------------------react-cropper -------------------
+npm install --save react-cropper
+http://bit.ly/reactcropper
+
+
 
 
 
