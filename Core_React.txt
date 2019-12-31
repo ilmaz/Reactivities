@@ -471,6 +471,23 @@ Microsoft.EntityFrameworkCore.Proxies
 //add startup
 opt.UseLazyLoadingProxies();
 //use Virtual keyword
+---------------Upload Image -------------
+https://cloudinary.com/
+
+dotnet user-secrets set "Cloudinary:CloudName" "???"
+dotnet user-secrets set "Cloudinary:ApiKey" "???"
+dotnet user-secrets set "Cloudinary:ApiSecret" "???"
+dotnet user-secrets list 
+
+register:
+services.Configure<CloudinarySettings>(Configuration.GetSection("Cloudinary"));
+
+Nuget:
+CloudinaryDotNet 
+
+
+
+
 
 
 
