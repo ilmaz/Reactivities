@@ -491,6 +491,13 @@ npm install --save react-dropzone
 npm install --save react-cropper
 http://bit.ly/reactcropper
 
+npm uninstall @tpes/react-cropper
+npm install  @types/cropperjs
+
+
+
+
+
 
 
 
