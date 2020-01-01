@@ -493,6 +493,19 @@ http://bit.ly/reactcropper
 
 npm uninstall @tpes/react-cropper
 npm install  @types/cropperjs
+------------------SignalR----------
+//ConfigureServices
+services.AddSignalR();
+
+//Configure
+ app.UseEndpoints(endpoints =>
+            {
+                endpoints.MapHub<ChatHub>("/chat");
+            });
+
+npm install @aspnet/signalr
+-----------------------------------
+
 
 
 

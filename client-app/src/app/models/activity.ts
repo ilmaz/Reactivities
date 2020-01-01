@@ -8,7 +8,12 @@ export interface IActivity {
     venue: string;
     isGoing: boolean;
     isHost: boolean;
-    userActivities: IAttendee[]
+    userActivities: IAttendee[];
+    comments: IComment[];
+}
+
+export interface IComment{
+
 }
 
 export interface IActivityFormValues extends Partial<IActivity> {

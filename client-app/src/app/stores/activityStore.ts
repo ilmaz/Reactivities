@@ -6,6 +6,7 @@ import { history } from '../..'
 import { toast } from 'react-toastify';
 import { RootStore } from './rootStore';
 import { setActivityProps, createAttendee } from '../common/util/util';
+import { HubConnection, HubConnectionBuilder, LogLevel } from '@aspnet/signalr';
 
 export default class ActivityStore {
     rootStore: RootStore;
@@ -20,6 +21,25 @@ export default class ActivityStore {
     @observable submitting = false;
     @observable target = '';
     @observable loading = false;
+    @observable.ref hubConnection: HubConnection | null = null;
+
+    @action createHubConnection = () => {
+        this.hubConnection = new HubConnectionBuilder()
+            .withUrl('http://localhost:5000/chat',{
+                accessTokenFactory:()=>this.rootStore.commonStore.token!
+            })
+            .configureLogging(LogLevel.Information)
+            .build();
+
+        this.hubConnection.start()
+            .then(() => console.log(this.hubConnection!.state))
+            .catch(error => console.log('Error establishing connection: ', console.error));
+
+        this.hubConnection.on('ReceiveComment', comment => {
+            this.activityRegistery!
+        })
+        
+    }
 
     //ijad khoroji jadid
     @computed get activitiesByDate() {
