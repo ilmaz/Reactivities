@@ -36,10 +36,26 @@ export default class ActivityStore {
             .catch(error => console.log('Error establishing connection: ', console.error));
 
         this.hubConnection.on('ReceiveComment', comment => {
-            this.activityRegistery!
+            runInAction(() => { 
+                this.selectedActivity!.comments.push(comment);
+            })
         })
         
     }
+
+    @action stopHubConnection = () => { 
+        this.hubConnection!.stop();
+    }
+
+    @action addComment = async (values: any) => {
+        values.activityId = this.selectedActivity!.id;
+        try {
+            //SendComment=> Method dar chatHub
+          await this.hubConnection!.invoke('SendComment', values)
+        } catch (error) {
+          console.log(error);
+        }
+      } 
 
     //ijad khoroji jadid
     @computed get activitiesByDate() {
@@ -117,6 +133,7 @@ export default class ActivityStore {
             let attendees = [];
             attendees.push(attendee);
             activity.userActivities = attendees;
+            activity.comments=[];
             activity.isHost = true;
             runInAction('creating activity', () => {
                 this.activityRegistery.set(activity.id, activity);

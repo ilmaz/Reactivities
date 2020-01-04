@@ -4,7 +4,7 @@ import { observer } from 'mobx-react-lite';
 import { RouteComponentProps } from 'react-router';
 import LoadingComponent from '../../../app/layout/LoadingComponent';
 import { ActivityDetailInfo } from './ActivityDetailInfo';
-import { ActivityDetailChat } from './ActivityDetailChat';
+import ActivityDetailChat from './ActivityDetailChat';
 import ActivityDetailSidebar from './ActivityDetailSidebar';
 import ActivityDetailHeader from './ActivityDetailHeader';
 import { RootStoreContext } from '../../../app/stores/rootStore';
