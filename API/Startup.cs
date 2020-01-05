@@ -62,6 +62,7 @@ namespace API
             })
             .AddFluentValidation(cfg => cfg.RegisterValidatorsFromAssemblyContaining<Create>())
             .SetCompatibilityVersion(Microsoft.AspNetCore.Mvc.CompatibilityVersion.Version_3_0)
+            // .AddJsonOptions(opt=>opt.SerializerSettings.ReferenceLoopHandling== ReferenceLoopHandling.Ignore)
             .AddNewtonsoftJson(opt => opt.SerializerSettings.ReferenceLoopHandling = ReferenceLoopHandling.Ignore);
 
             var builder = services.AddIdentityCore<AppUser>();

@@ -522,7 +522,12 @@ opt.EnableEndpointRouting = false;
 .AddNewtonsoftJson(opt => opt.SerializerSettings.ReferenceLoopHandling = ReferenceLoopHandling.Ignore);
 
 in services.AddControllers
------------------------------------
+------------------ infinite scrolling -----------------
+*baraye scroll ba mosue +loading -->ActivityDashboard
+npm install react-infinite-scroller
+npm install @types/react-infinite-scroller
+
+
 
 
 
