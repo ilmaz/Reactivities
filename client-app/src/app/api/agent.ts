@@ -52,7 +52,8 @@ const requests = {
 };
 
 const Activities = {
-    list: (limit?: number, page?: number): Promise<IActivitiesEnvelope> => requests.get(`/activities?limit?${limit}&offset=${page ? page * limit! : 0}`),
+    list: (params: URLSearchParams): Promise<IActivitiesEnvelope> =>
+    axios.get('/activities', {params: params}).then(sleep(1000)).then(responseBody),
     details: (id: string) => requests.get(`/activities/${id}`),
     create: (activity: IActivity) => requests.post('/activities', activity),
     update: (activity: IActivity) => requests.put(`/activities/${activity.id}`, activity),
@@ -71,7 +72,9 @@ const Profiles = {
     get: (username: string): Promise<IProfile> => requests.get(`/profiles/${username}`),
     uploadPhoto: (photo: Blob): Promise<IPhoto> => requests.postForm(`/photos`, photo),
     setMainPhoto: (id: string) => requests.post(`/photos/${id}/setMain`, {}),
-    deletePhoto: (id: string) => requests.del(`/photos/${id}`)
+    deletePhoto: (id: string) => requests.del(`/photos/${id}`),
+    listFollowings: (username: string, predicate: string) =>requests.get(`/profiles/${username}/follow?predicate=${predicate}`),
+    listActivities: (username: string, predicate: string) =>requests.get(`/profiles/${username}/activities?predicate=${predicate}`)
 }
 
 export default {

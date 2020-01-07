@@ -1,4 +1,4 @@
-import { observable, action, computed, runInAction } from 'mobx';
+import { observable, action, computed, runInAction, reaction } from 'mobx';
 import { SyntheticEvent } from 'react';
 import { IActivity } from '../models/activity';
 import agent from '../api/agent';
@@ -15,6 +15,16 @@ export default class ActivityStore {
 
     constructor(rootStore: RootStore) {
         this.rootStore = rootStore;
+
+        //vaghti this.predicate taghir kard in karharo bokon
+        reaction(
+            () => this.predicate.keys(),
+            () => {
+              this.page = 0;
+              this.activityRegistery.clear();
+              this.loadingActivity();
+            }
+          )
     }
 
     @observable activityRegistery = new Map();
@@ -26,19 +36,41 @@ export default class ActivityStore {
     @observable.ref hubConnection: HubConnection | null = null;
     @observable activityCount = 0;
     @observable page = 0;
+    @observable predicate = new Map();
+
+    @action setPredicate = (predicate: string, value: string | Date) => {
+        this.predicate.clear();
+        if (predicate !== 'all') {
+            this.predicate.set(predicate, value);
+        }
+    }
+
+    @computed get axiosParams() {
+        const params = new URLSearchParams();
+        params.append('limit', String(LIMIT));
+        params.append('offset', `${this.page ? this.page * LIMIT : 0}`);
+        this.predicate.forEach((value, key) => {
+            if (key === 'startDate') {
+                params.append(key, value.toISOString())
+            } else {
+                params.append(key, value)
+            }
+        })
+        return params;
+    }
 
     @computed get totalPages() {
         return Math.ceil(this.activityCount / LIMIT);
     }
 
-    @action setPage = (page: number) => { 
+    @action setPage = (page: number) => {
         this.page = page;
     }
 
     @action createHubConnection = () => {
         this.hubConnection = new HubConnectionBuilder()
-            .withUrl('http://localhost:5000/chat',{
-                accessTokenFactory:()=>this.rootStore.commonStore.token!
+            .withUrl('http://localhost:5000/chat', {
+                accessTokenFactory: () => this.rootStore.commonStore.token!
             })
             .configureLogging(LogLevel.Information)
             .build();
@@ -48,14 +80,14 @@ export default class ActivityStore {
             .catch(error => console.log('Error establishing connection: ', console.error));
 
         this.hubConnection.on('ReceiveComment', comment => {
-            runInAction(() => { 
+            runInAction(() => {
                 this.selectedActivity!.comments.push(comment);
             })
         })
-        
+
     }
 
-    @action stopHubConnection = () => { 
+    @action stopHubConnection = () => {
         this.hubConnection!.stop();
     }
 
@@ -63,11 +95,11 @@ export default class ActivityStore {
         values.activityId = this.selectedActivity!.id;
         try {
             //SendComment=> Method dar chatHub
-          await this.hubConnection!.invoke('SendComment', values)
+            await this.hubConnection!.invoke('SendComment', values)
         } catch (error) {
-          console.log(error);
+            console.log(error);
         }
-      } 
+    }
 
     //ijad khoroji jadid
     @computed get activitiesByDate() {
@@ -89,14 +121,14 @@ export default class ActivityStore {
     @action loadingActivity = async () => {
         this.loadingInitial = true;
         try {
-            const activitiesEnvelope = await agent.Activities.list(LIMIT, this.page);
+            const activitiesEnvelope = await agent.Activities.list(this.axiosParams);
             const { activities, activityCount } = activitiesEnvelope;
             runInAction('loading activities', () => {
                 activities.forEach((activity) => {
                     setActivityProps(activity, this.rootStore.userStore.user!);
                     this.activityRegistery.set(activity.id, activity);
                 });
-                this.activityCount = activityCount; 
+                this.activityCount = activityCount;
             })
             this.loadingInitial = false;
         }
@@ -147,7 +179,7 @@ export default class ActivityStore {
             let attendees = [];
             attendees.push(attendee);
             activity.userActivities = attendees;
-            activity.comments=[];
+            activity.comments = [];
             activity.isHost = true;
             runInAction('creating activity', () => {
                 this.activityRegistery.set(activity.id, activity);
@@ -220,26 +252,26 @@ export default class ActivityStore {
         }
     };
 
-      @action cancelAttendance = async () => {
+    @action cancelAttendance = async () => {
         this.loading = true;
         try {
-          await agent.Activities.unattend(this.selectedActivity!.id);
-          runInAction(() => {
-            if (this.selectedActivity) {
-              this.selectedActivity.userActivities = this.selectedActivity.userActivities.filter(
-                a => a.userName !== this.rootStore.userStore.user!.userName
-              );
-              this.selectedActivity.isGoing = false;
-              this.activityRegistery.set(this.selectedActivity.id, this.selectedActivity);
-              this.loading = false;
-            }
-          })
+            await agent.Activities.unattend(this.selectedActivity!.id);
+            runInAction(() => {
+                if (this.selectedActivity) {
+                    this.selectedActivity.userActivities = this.selectedActivity.userActivities.filter(
+                        a => a.userName !== this.rootStore.userStore.user!.userName
+                    );
+                    this.selectedActivity.isGoing = false;
+                    this.activityRegistery.set(this.selectedActivity.id, this.selectedActivity);
+                    this.loading = false;
+                }
+            })
         } catch (error) {
-          runInAction(() => {
-            this.loading = false;
-          })
-          toast.error('Problem cancelling attendance');
+            runInAction(() => {
+                this.loading = false;
+            })
+            toast.error('Problem cancelling attendance');
         }
-      };
+    };
 }
 

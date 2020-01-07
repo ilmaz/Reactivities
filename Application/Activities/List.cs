@@ -9,6 +9,7 @@ using Microsoft.Extensions.Logging;
 using AutoMapper;
 using System;
 using System.Linq;
+using Application.Interfaces;
 
 namespace Application.Activities
 {
@@ -40,13 +41,16 @@ namespace Application.Activities
         {
             private readonly DataContext _context;
             private readonly IMapper _mapper;
+            public IUserAccessor _userAccessor { get; }
+
             public Handler(DataContext context)
             {
                 _context = context;
             }
 
-            public Handler(DataContext context, IMapper mapper)
+            public Handler(DataContext context, IMapper mapper, IUserAccessor userAccessor)
             {
+                _userAccessor = userAccessor;
                 _context = context;
                 _mapper = mapper;
             }
@@ -72,20 +76,20 @@ namespace Application.Activities
                 //     .ThenInclude(x => x.AppUser)
                 //     .ToListAsync(cancellationToken);
 
-                 var queryable = _context.Activities
-                    .Where(x => x.Date >= request.StartDate)
-                    .OrderBy(x => x.Date)
-                    .AsQueryable();
-                    
-                // if (request.IsGoing && !request.IsHost)
-                // {
-                //     queryable = queryable.Where(x => x.UserActivities.Any(a => a.AppUser.UserName == _userAccessor.GetCurrentUsername()));
-                // }
+                var queryable = _context.Activities
+                   .Where(x => x.Date >= request.StartDate)
+                   .OrderBy(x => x.Date)
+                   .AsQueryable();
 
-                // if (request.IsHost && !request.IsGoing)
-                // {
-                //     queryable = queryable.Where(x => x.UserActivities.Any(a => a.AppUser.UserName == _userAccessor.GetCurrentUsername() && a.IsHost));
-                // }
+                if (request.IsGoing && !request.IsHost)
+                {
+                    queryable = queryable.Where(x => x.UserActivities.Any(a => a.AppUser.UserName == _userAccessor.GetCurrentUserName()));
+                }
+
+                if (request.IsHost && !request.IsGoing)
+                {
+                    queryable = queryable.Where(x => x.UserActivities.Any(a => a.AppUser.UserName == _userAccessor.GetCurrentUserName() && a.IsHost));
+                }
 
                 var activities = await queryable
                     .Skip(request.Offset ?? 0)
