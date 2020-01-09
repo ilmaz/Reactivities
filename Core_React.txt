@@ -526,6 +526,22 @@ in services.AddControllers
 *baraye scroll ba mosue +loading -->ActivityDashboard
 npm install react-infinite-scroller
 npm install @types/react-infinite-scroller
+------------ adding custom environment variables --------
+facebook.github.io/create-react-app/docs/adding-custom-environment-variables
+
+*create two files:
+.env.development
+.env.production
+------------------------ production ----------------------------------
+npm run build 
+
+add this in package.json file:
+"postbuild":"move build ../API/wwwwroot",
+
+add:
+app.UseDefaultFiles();
+app.UseStaticFiles();
+
 
 
 
